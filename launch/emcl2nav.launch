@@ -1,0 +1,38 @@
+<launch>
+  <arg name="model" default="burger" doc="model type [burger, waffle, waffle_pi]"/>
+
+  <!-- Set tf -->
+  <node pkg="tf" type="static_transform_publisher" name="world_to_map" args="0 0 0 0 0 0 world map 100" />
+
+  <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 base_footprint base_link 50" />
+  <!-- <node pkg="tf" type="static_transform_publisher" name="link2_broadcaster" args="0.25 0 0.70 0 0 0 base_link laser 50" /> -->
+  <node pkg="tf" type="static_transform_publisher" name="link2_broadcaster" args="0 0 0 3.14 0 0 base_link laser 50" />
+
+  <!-- hokuyo lidar -->
+  <node name="urg_node" pkg="urg_node" type="urg_node" output="screen"/>
+
+  <!-- Arguments -->
+  <arg name="map_file" default="$(find grobot)/map/bushitu.yaml"/>
+  <arg name="open_rviz" default="true"/>
+  <arg name="move_forward_only" default="false"/>
+
+  <!-- Map server -->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+  <!-- EMCL2 -->
+  <include file="$(find grobot)/launch/emcl2.launch"/>
+
+  <!-- move_base -->
+  <include file="$(find turtlebot3_navigation)/launch/move_base.launch">
+    <arg name="model" value="$(arg model)" />
+    <arg name="move_forward_only" value="$(arg move_forward_only)"/>
+  </include>
+
+  <!-- rviz -->
+  <group if="$(arg open_rviz)">
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find grobot)/rviz/nav_rviz.rviz"/>
+          <!-- 専用のrvizファイルを作成する -->
+  </group>
+
+</launch>

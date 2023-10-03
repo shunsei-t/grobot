@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
+        <param name="serial_port"         type="string" value="/dev/ttyUSB1"/>
+        <param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
+        <!--param name="serial_baudrate"     type="int"    value="256000"--><!--A3 -->
+        <param name="frame_id"            type="string" value="laser"/>
+        <param name="inverted"            type="bool"   value="false"/>
+        <param name="angle_compensate"    type="bool"   value="true"/>
+    </node>
+
+    <node name="robot_controller" pkg="grobot" type="robot_controller.py"  output="screen" respawn="false" respawn_delay="0">
+        <param name="dxl_port" value="/dev/ttyUSB0"/>
+        <param name="dxl_l_id" value="1"/>
+        <param name="dxl_r_id" value="2"/>
+        <param name="tread" value="0.16"/>
+        <param name="wheel_radius_merter" value="0.06"/>
+        <param name="odom_header_frame" value="odom"/>
+        <param name="odom_child_frame" value="base_footprint"/>
+    </node>
+
+</launch>

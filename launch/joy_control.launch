@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node name="joy_node" pkg="joy" type="joy_node" output="screen"/>
+
+    <node name="joy_to_twist" pkg="grobot" type="joy_to_twist.py"  output="screen" respawn="false" respawn_delay="0">
+        <remap from="twist_joy" to="cmd_vel"/>
+    </node>
+
+</launch>
